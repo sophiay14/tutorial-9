@@ -1,0 +1,16 @@
+---
+title: "Five Parameters"
+author: "Sophia Yao"
+format: html
+execute:
+  echo: false
+---
+
+```{r}
+#| label: setup
+#| message: false
+
+library(tidyverse)
+library(primer.data)
+```
+
