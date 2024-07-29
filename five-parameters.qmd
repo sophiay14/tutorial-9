@@ -12,6 +12,44 @@ execute:
 
 library(tidyverse)
 library(primer.data)
+library(brms)
+library(tidybayes)
+library(gtsummary)
 ```
 
-Using data from all deceased gubernatorial candidates in the United States between 1945 and 2012, we seek to forecast candidate longevity post-election. It may not be representative because only the two candidates with the most votes are included in the data set.
+```{r}
+#| label: model
+#| cache: true
+
+df1 <- governors |>
+  select(last_name, year, state, sex, lived_after, election_age)
+
+fit_all <- brm(data = df1, formula = lived_after ~ sex*election_age, silent = 2, refresh = 0, seed = 13)
+```
+
+```{r}
+ndata <- tibble(sex = c("Male", "Female"), 
+       election_age = 50)
+
+fit_all |>
+  add_epred_draws(newdata = ndata) |>
+  ggplot(aes(.epred, fill = sex)) +
+  geom_histogram(aes(y = after_stat(count/sum(count)),
+                alpha = 0.5, 
+                bins = 100, 
+                position = "identity")) + 
+  scale_x_continuous(labels = scales::number_format(accuracy = 1)) + 
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) + 
+  labs(title = "Posterior for Expected Years Lived Post-Election",
+      subtitle = "Male candidates live longer",
+      x = "Years",
+      y = "Probability",
+      colour = "sex")
+```
+
+Using data from all deceased gubernatorial candidates in the United States between 1945 and 2012, we seek to forecast candidate longevity post-election. It may not be representative because only the two candidates with the most votes are included in the data set. We built a model using brms in R to explore the relationship between the candidate's sex, their age at election, and how these factors interact. Our model indicates that male candidates generally live longer post-election than female candidates. At an election age of 50, males also live longer than female candidates.
+
+$$ 
+lived\_after_i =  \beta_0 + \beta_1 male_i + \beta_2 c\_election\_age_i + 
+\\ \beta_3 male_i *  c\_election\_age_i + \epsilon_i 
+$$

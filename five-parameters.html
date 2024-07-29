@@ -35,6 +35,35 @@ ul.task-list li input[type="checkbox"] {
 <link href="five-parameters_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="five-parameters_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -69,7 +98,27 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_histogram(aes(y = after_stat(count/sum(count)), alpha = 0.5, :
+Ignoring unknown aesthetics: bins and position</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="five-parameters_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Using data from all deceased gubernatorial candidates in the United States between 1945 and 2012, we seek to forecast candidate longevity post-election. It may not be representative because only the two candidates with the most votes are included in the data set. We built a model using brms in R to explore the relationship between the candidate’s sex, their age at election, and how these factors interact. Our model indicates that male candidates generally live longer post-election than female candidates. At an election age of 50, males also live longer than female candidates.</p>
+<p><span class="math display">\[
+lived\_after_i =  \beta_0 + \beta_1 male_i + \beta_2 c\_election\_age_i +
+\\ \beta_3 male_i *  c\_election\_age_i + \epsilon_i
+\]</span></p>
 
 </main>
 <!-- /main column -->
